@@ -2,6 +2,13 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -98,8 +105,40 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        /* Временные затраты - О(н)
+           Аппаратные - О(н)
+         */
+        int absoluteNull = 273;
+        int[] count = new int[7731];
+        BufferedReader buffer = new BufferedReader(new FileReader(inputName));
+        String line = buffer.readLine();
+        while (line != null) {
+            double number = Double.parseDouble(line);
+            if (number < -1 * absoluteNull || number > 500) throw new IllegalArgumentException();
+            int inMassive = (int) (number * 10);
+            count[inMassive + absoluteNull * 10]++;
+            line = buffer.readLine();
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
+        for (int i=0; i < 7731; i++) {
+            for (int j = 0; j<count[i]; j++) {
+                int outer = i;
+                if (outer < absoluteNull * 10){
+                    outer = absoluteNull * 10 - i;
+                    writer.write("-" + Integer.toString(outer / 10) + "." + (outer % 10));
+                    writer.newLine();
+                }
+                else {
+                    writer.write(Integer.toString(outer / 10 - absoluteNull) + "." + outer % 10);
+                    writer.newLine();
+                }
+
+            }
+
+        }
+        writer.close();
+
     }
 
     /**
@@ -131,8 +170,49 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        /* Временные затраты - О(н)
+           Аппаратные - О(н)
+         */
+        int maxCount = 0;
+        int maxCountNumber = Integer.MAX_VALUE;
+        BufferedReader buffer = new BufferedReader(new FileReader(inputName));
+        Map <Integer, Integer> countNumber = new HashMap <>();
+        List<Integer> list = new ArrayList<>();
+        String line = buffer.readLine();
+        while (line != null) {
+            int number = Integer.parseInt(line);
+            list.add(number);
+            Integer count = countNumber.get(number);
+            if (count==null) count=0;
+            countNumber.put(number, count+1);
+            if (count > maxCount) {
+                maxCount = count;
+                maxCountNumber = number;
+                }
+            else if (count == maxCount) {
+                if (number < maxCountNumber) {
+                    maxCountNumber = number;
+                }
+            }
+            line = buffer.readLine();
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
+        final int max = maxCountNumber;
+        list.stream().filter(integer -> integer!=max).forEach(c -> {
+            try {
+                writer.write(Integer.toString(c));
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        for (int i=0; i <= maxCount; i++) {
+            writer.write(Integer.toString(maxCountNumber));
+            writer.newLine();
+        }
+        writer.close();
+
     }
 
     /**

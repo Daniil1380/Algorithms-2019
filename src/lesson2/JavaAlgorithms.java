@@ -99,7 +99,7 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
+    static public String longestCommonSubstring(String first, String second) {
         throw new NotImplementedError();
     }
 
