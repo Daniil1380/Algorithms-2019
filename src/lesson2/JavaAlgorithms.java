@@ -213,19 +213,19 @@ public class JavaAlgorithms {
         numberOfSymbol++;
         if (numberOfSymbol  > string.length()) return true;
         if (i > 0 && !noWay[i-1][j] && symbols[i-1][j] == string.charAt(numberOfSymbol - 1)) {
-            go = find(symbols, string, i - 1, j, noWay.clone(), numberOfSymbol, h, w);
+            go = find(symbols, string, i - 1, j, noWay, numberOfSymbol, h, w);
             if (go) return true;
         }
         if (i < h - 1 && !noWay[i+1][j] && symbols[i+1][j] == string.charAt(numberOfSymbol - 1)) {
-            go =find(symbols, string, i + 1, j, noWay.clone(), numberOfSymbol, h, w);
+            go =find(symbols, string, i + 1, j, noWay, numberOfSymbol, h, w);
             if (go) return true;
         }
         if (j > 0 && !noWay[i][j-1] && symbols[i][j-1] == string.charAt(numberOfSymbol - 1)) {
-            go = find(symbols, string, i, j-1, noWay.clone(), numberOfSymbol, h, w);
+            go = find(symbols, string, i, j-1, noWay, numberOfSymbol, h, w);
             if (go) return true;
         }
         if (j < w - 1 && !noWay[i][j+1] && symbols[i][j+1] == string.charAt(numberOfSymbol - 1)) {
-            go = find(symbols, string, i, j + 1, noWay.clone(), numberOfSymbol, h, w);
+            go = find(symbols, string, i, j + 1, noWay, numberOfSymbol, h, w);
             return go;
         }
         return false;
