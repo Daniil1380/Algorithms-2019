@@ -3,7 +3,10 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -100,7 +103,23 @@ public class JavaAlgorithms {
      * вернуть ту из них, которая встречается раньше в строке first.
      */
     static public String longestCommonSubstring(String first, String second) {
-        throw new NotImplementedError();
+        // Аппаратные затраты - О(n * m)
+        // Временные О(n * m)
+        int[][] dualMassive = new int[first.length() + 1][second.length() + 1];
+        int max = 0;
+        int maxIndex = 0;
+        for (int i = 0; i < first.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+                if (first.charAt(i) == second.charAt(j)) {
+                    dualMassive[i+1][j+1]=dualMassive[i][j] + 1;
+                    if  (max < dualMassive[i+1][j+1]) {
+                        max = dualMassive[i+1][j+1];
+                        maxIndex = i;
+                    }
+                }
+            }
+        }
+        return first.substring(maxIndex - max + 1, maxIndex + 1);
     }
 
     /**
@@ -143,7 +162,73 @@ public class JavaAlgorithms {
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
-    static public Set<String> baldaSearcher(String inputName, Set<String> words) {
-        throw new NotImplementedError();
+    static public Set<String> baldaSearcher(String inputName, Set<String> words) throws IOException {
+        //Аппаратные затраты - О(n * m)
+        //Временные О(n * m * k), где k - количество слов
+        List<String> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        int w;
+        int h = 0;
+        try (BufferedReader buffer = new BufferedReader(new FileReader(inputName))) {
+            String line = buffer.readLine();
+            while (line != null) {
+                h++;
+                list.add(line);
+                line = buffer.readLine();
+            }
+        }
+        w = list.get(0).length() / 2 + 1;
+        char[][] symbols = new char[h][w];
+        boolean[][] noWay;
+        for (int i = 0; i < list.size(); i++) {
+            int count = 0;
+            for (int j = 0; j < list.get(i).length(); j++) {
+                char now = list.get(i).charAt(j);
+                if (now != ' ') {
+                    symbols[i][count] = now;
+                    count++;
+                }
+            }
+        }
+        for (String string: words) {
+            int symbolsEquals = 0;
+            for (int i = 0; i < h; i++) {
+                for (int j = 0; j < w; j++) {
+                    noWay = new boolean[h][w];
+                    if (symbols[i][j]==string.charAt(0)) {
+                        if (find(symbols, string, i, j, noWay, 1, h, w)
+                                || string.length() == 1) set.add(string);
+                        }
+                    }
+                }
+            }
+            return set;
+        }
+
+
+    static private boolean find(char[][] symbols, String string, int i, int j, boolean[][] noWay, int numberOfSymbol, int h,int w) {
+        noWay[i][j] = true;
+        boolean go;
+        numberOfSymbol++;
+        if (numberOfSymbol  > string.length()) return true;
+        if (i > 0 && !noWay[i-1][j] && symbols[i-1][j] == string.charAt(numberOfSymbol - 1)) {
+            go = find(symbols, string, i - 1, j, noWay.clone(), numberOfSymbol, h, w);
+            if (go) return true;
+        }
+        if (i < h - 1 && !noWay[i+1][j] && symbols[i+1][j] == string.charAt(numberOfSymbol - 1)) {
+            go =find(symbols, string, i + 1, j, noWay.clone(), numberOfSymbol, h, w);
+            if (go) return true;
+        }
+        if (j > 0 && !noWay[i][j-1] && symbols[i][j-1] == string.charAt(numberOfSymbol - 1)) {
+            go = find(symbols, string, i, j-1, noWay.clone(), numberOfSymbol, h, w);
+            if (go) return true;
+        }
+        if (j < w - 1 && !noWay[i][j+1] && symbols[i][j+1] == string.charAt(numberOfSymbol - 1)) {
+            go = find(symbols, string, i, j + 1, noWay.clone(), numberOfSymbol, h, w);
+            return go;
+        }
+        return false;
+
+
     }
 }

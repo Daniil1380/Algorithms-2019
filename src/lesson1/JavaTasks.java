@@ -107,18 +107,20 @@ public class JavaTasks {
      */
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         /* Временные затраты - О(н)
-           Аппаратные - О(н)
+           Аппаратные - О(1)
          */
         int absoluteNull = 273;
-        int[] count = new int[7731];
-        BufferedReader buffer = new BufferedReader(new FileReader(inputName));
-        String line = buffer.readLine();
-        while (line != null) {
-            double number = Double.parseDouble(line);
-            if (number < -1 * absoluteNull || number > 500) throw new IllegalArgumentException();
-            int inMassive = (int) (number * 10);
-            count[inMassive + absoluteNull * 10]++;
-            line = buffer.readLine();
+        int n = (absoluteNull +  500) * 10 + 1;
+        int[] count = new int[n];
+        try (BufferedReader buffer = new BufferedReader(new FileReader(inputName))) {
+            String line = buffer.readLine();
+            while (line != null) {
+                double number = Double.parseDouble(line);
+                if (number < -1 * absoluteNull || number > 500) throw new IllegalArgumentException();
+                int inMassive = (int) (number * 10);
+                count[inMassive + absoluteNull * 10]++;
+                line = buffer.readLine();
+            }
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
         for (int i=0; i < 7731; i++) {
@@ -176,27 +178,28 @@ public class JavaTasks {
          */
         int maxCount = 0;
         int maxCountNumber = Integer.MAX_VALUE;
-        BufferedReader buffer = new BufferedReader(new FileReader(inputName));
-        Map <Integer, Integer> countNumber = new HashMap <>();
         List<Integer> list = new ArrayList<>();
-        String line = buffer.readLine();
-        while (line != null) {
-            int number = Integer.parseInt(line);
-            list.add(number);
-            Integer count = countNumber.get(number);
-            if (count==null) count=0;
-            countNumber.put(number, count+1);
-            if (count > maxCount) {
-                maxCount = count;
-                maxCountNumber = number;
-                }
-            else if (count == maxCount) {
-                if (number < maxCountNumber) {
+        try (BufferedReader buffer = new BufferedReader(new FileReader(inputName))) {
+            Map<Integer, Integer> countNumber = new HashMap<>();
+            String line = buffer.readLine();
+            while (line != null) {
+                int number = Integer.parseInt(line);
+                list.add(number);
+                Integer count = countNumber.get(number);
+                if (count == null) count = 0;
+                countNumber.put(number, count + 1);
+                if (count > maxCount) {
+                    maxCount = count;
                     maxCountNumber = number;
+                } else if (count == maxCount) {
+                    if (number < maxCountNumber) {
+                        maxCountNumber = number;
+                    }
                 }
+                line = buffer.readLine();
             }
-            line = buffer.readLine();
         }
+
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
         final int max = maxCountNumber;
         list.stream().filter(integer -> integer!=max).forEach(c -> {
@@ -211,6 +214,7 @@ public class JavaTasks {
             writer.write(Integer.toString(maxCountNumber));
             writer.newLine();
         }
+
         writer.close();
 
     }
