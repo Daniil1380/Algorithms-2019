@@ -206,7 +206,8 @@ public class JavaAlgorithms {
         }
 
 
-    static private boolean find(char[][] symbols, String string, int i, int j, boolean[][] noWay, int numberOfSymbol, int h,int w) {
+    static private boolean find(char[][] symbols, String string, int i, int j,
+                                boolean[][] noWay, int numberOfSymbol, int h,int w) {
         noWay[i][j] = true;
         boolean go;
         numberOfSymbol++;
