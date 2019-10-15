@@ -110,20 +110,21 @@ public class JavaTasks {
            Аппаратные - О(1)
          */
         int absoluteNull = 273;
-        int n = (absoluteNull +  500) * 10 + 1;
+        int absoluteMax = 500;
+        int n = (absoluteNull +  absoluteMax) * 10 + 1;
         int[] count = new int[n];
         try (BufferedReader buffer = new BufferedReader(new FileReader(inputName))) {
             String line = buffer.readLine();
             while (line != null) {
                 double number = Double.parseDouble(line);
-                if (number < -1 * absoluteNull || number > 500) throw new IllegalArgumentException();
+                if (number < -1 * absoluteNull || number > absoluteMax) throw new IllegalArgumentException();
                 int inMassive = (int) (number * 10);
                 count[inMassive + absoluteNull * 10]++;
                 line = buffer.readLine();
             }
         }
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
-        for (int i=0; i < 7731; i++) {
+        for (int i=0; i < n; i++) {
             for (int j = 0; j<count[i]; j++) {
                 int outer = i;
                 if (outer < absoluteNull * 10){
