@@ -123,24 +123,24 @@ public class JavaTasks {
                 line = buffer.readLine();
             }
         }
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
-        for (int i=0; i < n; i++) {
-            for (int j = 0; j<count[i]; j++) {
-                int outer = i;
-                if (outer < absoluteNull * 10){
-                    outer = absoluteNull * 10 - i;
-                    writer.write("-" + Integer.toString(outer / 10) + "." + (outer % 10));
-                    writer.newLine();
-                }
-                else {
-                    writer.write(Integer.toString(outer / 10 - absoluteNull) + "." + outer % 10);
-                    writer.newLine();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputName))) {
+
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < count[i]; j++) {
+                    int outer = i;
+                    if (outer < absoluteNull * 10) {
+                        outer = absoluteNull * 10 - i;
+                        writer.write("-" + Integer.toString(outer / 10) + "." + (outer % 10));
+                        writer.newLine();
+                    } else {
+                        writer.write(Integer.toString(outer / 10 - absoluteNull) + "." + outer % 10);
+                        writer.newLine();
+                    }
+
                 }
 
             }
-
         }
-        writer.close();
 
     }
 
@@ -201,22 +201,22 @@ public class JavaTasks {
             }
         }
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
-        final int max = maxCountNumber;
-        list.stream().filter(integer -> integer!=max).forEach(c -> {
-            try {
-                writer.write(Integer.toString(c));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputName))) {
+            final int max = maxCountNumber;
+            list.stream().filter(integer -> integer != max).forEach(c -> {
+                try {
+                    writer.write(Integer.toString(c));
+                    writer.newLine();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            for (int i = 0; i <= maxCount; i++) {
+                writer.write(Integer.toString(maxCountNumber));
                 writer.newLine();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        });
-        for (int i=0; i <= maxCount; i++) {
-            writer.write(Integer.toString(maxCountNumber));
-            writer.newLine();
-        }
 
-        writer.close();
+        }
 
     }
 

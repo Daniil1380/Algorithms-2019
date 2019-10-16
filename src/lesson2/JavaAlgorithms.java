@@ -4,6 +4,7 @@ import kotlin.NotImplementedError;
 import kotlin.Pair;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -179,7 +180,7 @@ public class JavaAlgorithms {
         }
         w = list.get(0).length() / 2 + 1;
         char[][] symbols = new char[h][w];
-        boolean[][] noWay;
+        boolean[][] noWay = new boolean[h][w];
         for (int i = 0; i < list.size(); i++) {
             int count = 0;
             for (int j = 0; j < list.get(i).length(); j++) {
@@ -192,18 +193,17 @@ public class JavaAlgorithms {
         }
         for (String string: words) {
             int symbolsEquals = 0;
-            for (int i = 0; i < h; i++) {
+            for (int i = 0; i < h; i++)
                 for (int j = 0; j < w; j++) {
-                    noWay = new boolean[h][w];
-                    if (symbols[i][j]==string.charAt(0)) {
+                    noWay = filler(noWay, h);
+                    if (symbols[i][j] == string.charAt(0)) {
                         if (find(symbols, string, i, j, noWay, 1, h, w)
                                 || string.length() == 1) set.add(string);
-                        }
                     }
                 }
-            }
-            return set;
         }
+        return set;
+    }
 
 
     static private boolean find(char[][] symbols, String string, int i, int j,
@@ -231,5 +231,12 @@ public class JavaAlgorithms {
         return false;
 
 
+    }
+
+    static private boolean[][] filler(boolean[][] massive, int h) {
+        for (int i = 0; i < h; i++) {
+            Arrays.fill(massive[i], false);
+        }
+        return massive;
     }
 }
