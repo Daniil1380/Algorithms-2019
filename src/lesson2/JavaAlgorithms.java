@@ -229,8 +229,6 @@ public class JavaAlgorithms {
             return go;
         }
         return false;
-
-
     }
 
     static private boolean[][] filler(boolean[][] massive, int h) {
