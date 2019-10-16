@@ -215,9 +215,7 @@ public class JavaTasks {
                 writer.write(Integer.toString(maxCountNumber));
                 writer.newLine();
             }
-
         }
-
     }
 
     /**
