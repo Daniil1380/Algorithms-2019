@@ -1,6 +1,8 @@
 package lesson1
 
 import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.assertThrows
 import util.PerfResult
 import util.estimate
 import java.io.BufferedWriter
@@ -9,6 +11,7 @@ import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.math.abs
 import kotlin.system.measureNanoTime
+import kotlin.test.assertTrue
 
 abstract class AbstractTaskTests : AbstractFileTests() {
 
@@ -119,16 +122,28 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+        var bool = false
         try {
             sortTemperatures("input/temp_in2.txt", "temp.txt")
 
         } catch (e: IllegalArgumentException) {
+            bool = true
         } finally {
+            assert(bool)
             File("temp.txt").delete()
         }
 
         try {
             sortTemperatures("input/temp_in3.txt", "temp.txt")
+            assertFileContent(
+                "temp.txt",
+                """
+                    -1.1
+                    0.0
+                    1.9
+                    2.1
+                """.trimIndent()
+            )
 
         } finally {
             File("temp.txt").delete()
@@ -287,6 +302,27 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                         41
                         32
                         32
+                    """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+
+        try {
+            sortSequence("input/seq_in6.txt", "temp.txt")
+            assertFileContent(
+                "temp.txt",
+                """
+                     32
+                     13
+                     45
+                     32
+                     45
+                     91
+                     41
+                     41
+                     41
+                     41
                     """.trimIndent()
             )
         } finally {

@@ -165,7 +165,10 @@ public class JavaAlgorithms {
      */
     static public Set<String> baldaSearcher(String inputName, Set<String> words) throws IOException {
         //Аппаратные затраты - О(n * m)
-        //Временные О(n * m * k), где k - количество слов
+        //Временные О(n * m * k), где k - количество слов - это только для трех вложенных for, однако
+        //У нас еще есть рекурсия, зависящая от количества букв (в общем), так как всего 4 варианта существует, а
+        //1 мы исрользуем на прошлом шаге (кроме первого случая), то в общем затраты будут - О(n * m * k * 3^(z-k) * 4^k)
+        //где n и m - размер, k - слова и z - буквы
         List<String> list = new ArrayList<>();
         Set<String> set = new HashSet<>();
         int w;
