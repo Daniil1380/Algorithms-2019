@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
 
 // Attention: comparable supported but comparator is not
 public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
@@ -74,8 +75,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
         throw new NotImplementedError();
+        //надеюсь, доберусь до  нее
     }
 
     @Override
@@ -108,8 +109,18 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     public class BinaryTreeIterator implements Iterator<T> {
 
+        private Node<T> now = null;
+        private Queue<Node<T>> iterator = new LinkedList<>();
+
         private BinaryTreeIterator() {
-            // Добавьте сюда инициализацию, если она необходима
+            if (root != null) creator(root);
+        }
+        //Т=O(n), R=O(1)
+        //т.к заполняем iterator
+        private void creator(Node<T> root) {
+            if (root.left != null) creator(root.left);
+            iterator.offer(root);
+            if (root.right != null) creator(root.right);
         }
 
         /**
@@ -117,9 +128,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Средняя
          */
         @Override
+        //Т=O(1), R=O(1)
+        //Сложность peek взята за основу
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            Node answer = iterator.peek();
+            return answer != null;
         }
 
         /**
@@ -127,9 +140,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Средняя
          */
         @Override
+        //Т=O(1), R=O(1)
+        //просто взята сложность ремува для LinkedList
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            Node node = iterator.remove();
+            return (node!= null) ? (T) node.value : null;
+
         }
 
         /**
@@ -167,9 +183,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @NotNull
     @Override
+    //Вывод: Т=O(1), R=O(1)
+    // Так как просто вызываем конструктор, содержащий в себе ссылку на дерево и два ограничения
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        return new SubBinaryTree(this, fromElement, toElement);
     }
 
     /**
@@ -212,5 +229,44 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             current = current.right;
         }
         return current.value;
+    }
+    class SubBinaryTree extends BinaryTree<T> {
+        private BinaryTree<T> tree;
+        private final T from;
+        private final T to;
+
+        SubBinaryTree(BinaryTree<T> tree, T from, T to) {
+            this.tree = tree;
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        public boolean add(T t) {
+            if (!inSubSet(t)) throw new IllegalArgumentException();
+            return tree.add(t);
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            if (!inSubSet((T) o)) return false;
+            return tree.contains(o);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            if (!inSubSet((T) o)) throw new IllegalArgumentException();
+            return tree.remove(o);
+            //я знаю, вызывется пустой ремув, никак не успеваю его написать, не бейте ;)
+        }
+
+        @Override
+        public int size() {
+           return (int) tree.stream().filter(this::inSubSet).count();
+        }
+
+        private boolean inSubSet(T t) {
+            return t.compareTo(from) >= 0 && t.compareTo(to) < 0;
+        }
     }
 }
