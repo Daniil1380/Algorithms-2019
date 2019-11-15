@@ -154,8 +154,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            iterator.poll();
         }
     }
 
@@ -186,7 +185,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     //Вывод: Т=O(1), R=O(1)
     // Так как просто вызываем конструктор, содержащий в себе ссылку на дерево и два ограничения
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        return new SubBinaryTree(this, fromElement, toElement);
+        return new SubBinaryTree(this, fromElement, toElement, 0);
     }
 
     /**
@@ -195,9 +194,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @NotNull
     @Override
+    //Вывод: Т=O(1), R=O(1)
+    // Так как просто вызываем конструктор, содержащий в себе ссылку на дерево и два ограничения
     public SortedSet<T> headSet(T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        return new SubBinaryTree(this, null, toElement, 1);
     }
 
     /**
@@ -207,8 +207,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        // TODO
-        throw new NotImplementedError();
+        return new SubBinaryTree(this, fromElement, null, -1);
     }
 
     @Override
@@ -234,12 +233,17 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         private BinaryTree<T> tree;
         private final T from;
         private final T to;
+        private final int headOrTail;
 
-        SubBinaryTree(BinaryTree<T> tree, T from, T to) {
+        SubBinaryTree(BinaryTree<T> tree, T from, T to, int headOrTail) {
             this.tree = tree;
             this.from = from;
             this.to = to;
+            this.headOrTail = headOrTail;
+            //HeadOrTail использован, чтобы определять, входит число в заданные границы или нет. Если равен 0, то
+            //обе границы есть, если -1 то левая, если 1 - правая
         }
+
 
         @Override
         public boolean add(T t) {
@@ -266,7 +270,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
 
         private boolean inSubSet(T t) {
-            return t.compareTo(from) >= 0 && t.compareTo(to) < 0;
+            if ((headOrTail <=0) && t.compareTo(from) < 0) return false;
+            if ((headOrTail >=0) && t.compareTo(to)>= 0) return false;
+           return true;
         }
     }
 }
