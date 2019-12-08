@@ -43,8 +43,8 @@ public class JavaDynamicTasks {
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
         if (list.isEmpty()) return list;
         int number = 0;
-        List<Integer> answer = new ArrayList<>();
         int maxOfAll = -1;
+        List<Integer> answer = new ArrayList<>();
         int[] size = new int[list.size()];
         for (int i = size.length - 1; i >= 0; i--) {
             int max = -1;
