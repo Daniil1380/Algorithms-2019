@@ -38,7 +38,7 @@ public class JavaDynamicTasks {
      * то вернуть ту, в которой числа расположены раньше (приоритет имеют первые числа).
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
      */
-    //Аппаратные - O(n)
+    //Затраты памяти- O(n)
     //Временные - O(n * n)
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
         if (list.isEmpty()) return list;
@@ -59,7 +59,7 @@ public class JavaDynamicTasks {
                 number = i;
             }
         }
-            while (maxOfAll > -1) {
+        while (maxOfAll > -1) {
             for (int i = number; i < list.size(); i++) {
                 if (size[i] == maxOfAll && list.get(number) <= list.get(i)) {
                     answer.add(list.get(i));
@@ -92,7 +92,7 @@ public class JavaDynamicTasks {
      * <p>
      * Здесь ответ 2 + 3 + 4 + 1 + 2 = 12
      */
-    //Аппаратные - O(n * m)
+    //Затраты памяти - O(n * m)
     //Временные - O(n * m)
     public static int shortestPathOnField(String inputName) throws IOException {
         List<String[]> field = new ArrayList<>();
